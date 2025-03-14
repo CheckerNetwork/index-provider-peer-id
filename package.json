@@ -1,0 +1,33 @@
+{
+  "name": "index-provider-peer-id",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test:unit": "node --test",
+    "test:types": "tsc -p .",
+    "lint": "eslint && prettier --check .",
+    "lint:fix": "eslint --fix && prettier . --write",
+    "test": "npm run lint && npm run test:types && npm run test:unit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CheckerNetwork/index-provider-peer-id.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CheckerNetwork/index-provider-peer-id/issues"
+  },
+  "homepage": "https://github.com/CheckerNetwork/index-provider-peer-id#readme",
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "neostandard": "^0.12.1",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  }
+}
