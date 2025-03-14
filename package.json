@@ -15,9 +15,8 @@
     "type": "git",
     "url": "git+https://github.com/CheckerNetwork/index-provider-peer-id.git"
   },
-  "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "(Apache-2.0 AND MIT)",
   "bugs": {
     "url": "https://github.com/CheckerNetwork/index-provider-peer-id/issues"
   },
