@@ -28,5 +28,9 @@
     "neostandard": "^0.12.1",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "ethers": "^6.13.5",
+    "p-retry": "^6.2.1"
   }
 }
