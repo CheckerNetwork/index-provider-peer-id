@@ -17,10 +17,7 @@ function createMockContract(mockResponses) {
   return {
     getPeerData: async (minerId) => {
       const response = mockResponses[minerId]
-      if (!response) {
-        throw new Error(`Miner ID ${minerId} not found in contract`)
-      }
-      return response
+      return response ?? ''
     },
   }
 }
@@ -71,20 +68,15 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
     )
   })
 
-  it('throws error for non-existent miner ID', async () => {
+  it('returns null for non-existent miner ID', async () => {
     // Create mock contract with predefined responses (empty to cause error)
     const mockContract = createMockContract({})
-    await assert.rejects(
-      async () =>
-        await getIndexProviderPeerIdFromSmartContract('f055555', {
-          smartContract: mockContract,
-        }),
-      (err) => {
-        // Check if the error message contains the expected substring
-        assert.ok(err.cause.toString().includes('Miner ID 55555 not found in contract'))
-        return true
-      },
-    )
+    const minerId = 99999
+    const peerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, {
+      smartContract: mockContract,
+    })
+
+    assert.deepStrictEqual(peerId, null)
   })
 
   it('properly strips f0 prefix', async () => {
