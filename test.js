@@ -76,7 +76,7 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
       smartContract: mockContract,
     })
 
-    assert.deepStrictEqual(peerId, null)
+    assert.deepStrictEqual(peerId, undefined)
   })
 
   it('properly strips f0 prefix', async () => {
@@ -104,5 +104,27 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
     const id = 'f03495400'
     const peerId = await getIndexProviderPeerIdFromSmartContract(id)
     assert.deepStrictEqual(peerId, '')
+  })
+
+  it('returns error if smart contract call fails', async () => {
+    const mockContract = {
+      getPeerData: async () => {
+        throw new Error('SMART CONTRACT ERROR')
+      },
+    }
+    await assert.rejects(
+      async () => {
+        await getIndexProviderPeerIdFromSmartContract('f0123456', {
+          smartContract: mockContract,
+        })
+      },
+      (err) => {
+        assert.ok(
+          err.cause.toString().includes('SMART CONTRACT ERROR'),
+          'Expected error message: SMART CONTRACT ERROR, got ' + err.cause,
+        )
+        return true
+      },
+    )
   })
 })
