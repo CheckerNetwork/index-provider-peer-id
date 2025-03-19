@@ -17,7 +17,7 @@ function createMockContract(mockResponses) {
   return {
     getPeerData: async (minerId) => {
       const response = mockResponses[minerId]
-      return response ?? ''
+      return response ?? { peerID: '' }
     },
   }
 }
@@ -68,7 +68,7 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
     )
   })
 
-  it('returns null for non-existent miner ID', async () => {
+  it('returns empty string for non-existent miner ID', async () => {
     // Create mock contract with predefined responses (empty to cause error)
     const mockContract = createMockContract({})
     const minerId = 99999
@@ -76,7 +76,7 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
       smartContract: mockContract,
     })
 
-    assert.deepStrictEqual(peerId, undefined)
+    assert.deepStrictEqual(peerId, '')
   })
 
   it('properly strips f0 prefix', async () => {
