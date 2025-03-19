@@ -1,6 +1,11 @@
-import { getIndexProviderPeerIdFromSmartContract } from './lib/smart-contract-client.js'
+import {
+  getIndexProviderPeerIdFromSmartContract,
+  initializeSmartContract,
+} from './lib/smart-contract-client.js'
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
+
+export const { RPC_URL = 'https://api.node.glif.io/', RPC_AUTH } = process.env
 
 const validPeerIdResponse = {
   peerID: '12D3KooWGQmdpbssrYHWFTwwbKmKL3i54EJC9j7RRNb47U9jUv1U',
@@ -30,14 +35,13 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
       [minerId]: validPeerIdResponse,
     })
 
-    const actualPeerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, {
-      smartContract: mockContract,
-    })
+    const actualPeerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, mockContract)
 
     assert.deepStrictEqual(actualPeerId, validPeerIdResponse.peerID)
   })
   it('returns correct peer id for miner f03303347', async () => {
-    const peerId = await getIndexProviderPeerIdFromSmartContract('f03303347')
+    const smartContract = initializeSmartContract(RPC_URL, RPC_AUTH)
+    const peerId = await getIndexProviderPeerIdFromSmartContract('f03303347', smartContract)
     assert.deepStrictEqual(typeof peerId, 'string', 'Expected peerId to be a string')
     assert.deepStrictEqual(peerId, '12D3KooWJ91c6xQshrNe7QAXPFAaeRrHWq2UrgXGPf8UmMZMwyZ5')
   })
@@ -48,17 +52,16 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
       [minerId]: emptyPeerIdResponse,
     })
 
-    const actualPeerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, {
-      smartContract: mockContract,
-    })
+    const actualPeerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, mockContract)
 
     assert.deepStrictEqual(actualPeerId, '')
   })
   it('returns an error if the miner id is not a number', async () => {
     await assert.rejects(
       async () => {
+        const smartContract = initializeSmartContract(RPC_URL, RPC_AUTH)
         // Call your async function that should throw
-        await getIndexProviderPeerIdFromSmartContract('abcdef')
+        await getIndexProviderPeerIdFromSmartContract('abcdef', smartContract)
       },
       (err) => {
         // Check if the error message contains the expected substring
@@ -72,9 +75,7 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
     // Create mock contract with predefined responses (empty to cause error)
     const mockContract = createMockContract({})
     const minerId = 99999
-    const peerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, {
-      smartContract: mockContract,
-    })
+    const peerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, mockContract)
 
     assert.deepStrictEqual(peerId, '')
   })
@@ -90,9 +91,7 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
       },
     }
 
-    await getIndexProviderPeerIdFromSmartContract('f0123456', {
-      smartContract: mockContract,
-    })
+    await getIndexProviderPeerIdFromSmartContract('f0123456', mockContract)
 
     assert.deepStrictEqual(receivedMinerId, 123456)
   })
@@ -102,7 +101,8 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
     // This is a client ID not a miner ID so it will not exist in the smart contract
     // See: https://filecoin.tools/mainnet/deal/126288315
     const id = 'f03495400'
-    const peerId = await getIndexProviderPeerIdFromSmartContract(id)
+    const smartContract = initializeSmartContract(RPC_URL, RPC_AUTH)
+    const peerId = await getIndexProviderPeerIdFromSmartContract(id, smartContract)
     assert.deepStrictEqual(peerId, '')
   })
 
@@ -114,9 +114,7 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
     }
     await assert.rejects(
       async () => {
-        await getIndexProviderPeerIdFromSmartContract('f0123456', {
-          smartContract: mockContract,
-        })
+        await getIndexProviderPeerIdFromSmartContract('f0123456', mockContract)
       },
       (err) => {
         assert.ok(
