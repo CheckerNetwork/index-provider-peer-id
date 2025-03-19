@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
-        env: 
+        env:
           RPC_AUTH: ${{secrets.RPC_AUTH}}
       - run: npm run test:unit
         env:
