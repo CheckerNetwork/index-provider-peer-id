@@ -1,11 +1,17 @@
 import {
   getIndexProviderPeerIdFromSmartContract,
-  initializeSmartContract,
+  createSmartContractClient,
 } from './lib/smart-contract-client.js'
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
+import { ethers } from 'ethers'
 
 export const { RPC_URL = 'https://api.node.glif.io/', RPC_AUTH } = process.env
+// Create a custom JsonRpcProvider with authorization header
+const fetchRequest = new ethers.FetchRequest(RPC_URL)
+fetchRequest.setHeader('Authorization', `Bearer ${RPC_AUTH}`)
+const defaultProvider = new ethers.JsonRpcProvider(fetchRequest)
+const smartContract = createSmartContractClient(defaultProvider)
 
 const validPeerIdResponse = {
   peerID: '12D3KooWGQmdpbssrYHWFTwwbKmKL3i54EJC9j7RRNb47U9jUv1U',
@@ -40,7 +46,6 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
     assert.deepStrictEqual(actualPeerId, validPeerIdResponse.peerID)
   })
   it('returns correct peer id for miner f03303347', async () => {
-    const smartContract = initializeSmartContract(RPC_URL, RPC_AUTH)
     const peerId = await getIndexProviderPeerIdFromSmartContract('f03303347', smartContract)
     assert.deepStrictEqual(typeof peerId, 'string', 'Expected peerId to be a string')
     assert.deepStrictEqual(peerId, '12D3KooWJ91c6xQshrNe7QAXPFAaeRrHWq2UrgXGPf8UmMZMwyZ5')
@@ -59,7 +64,6 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
   it('returns an error if the miner id is not a number', async () => {
     await assert.rejects(
       async () => {
-        const smartContract = initializeSmartContract(RPC_URL, RPC_AUTH)
         // Call your async function that should throw
         await getIndexProviderPeerIdFromSmartContract('abcdef', smartContract)
       },
@@ -101,7 +105,6 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
     // This is a client ID not a miner ID so it will not exist in the smart contract
     // See: https://filecoin.tools/mainnet/deal/126288315
     const id = 'f03495400'
-    const smartContract = initializeSmartContract(RPC_URL, RPC_AUTH)
     const peerId = await getIndexProviderPeerIdFromSmartContract(id, smartContract)
     assert.deepStrictEqual(peerId, '')
   })
