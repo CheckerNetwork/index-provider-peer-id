@@ -13,7 +13,11 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
+        env:
+          RPC_AUTH: ${{secrets.GLIF_API_TOKEN}}
       - run: npm run test:unit
+        env:
+          RPC_AUTH: ${{secrets.RPC_AUTH}}
 
   lint:
     runs-on: ubuntu-latest

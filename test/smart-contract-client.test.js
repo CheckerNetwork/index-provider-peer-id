@@ -1,6 +1,15 @@
 import { getIndexProviderPeerIdFromSmartContract } from '../lib/smart-contract-client.js'
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
+import { ethers } from 'ethers'
+import { MINER_TO_PEERID_CONTRACT_ADDRESS, ABI } from '../index.js'
+
+export const { RPC_URL = 'https://api.node.glif.io/', RPC_AUTH } = process.env
+// Create a custom JsonRpcProvider with authorization header
+const fetchRequest = new ethers.FetchRequest(RPC_URL)
+fetchRequest.setHeader('Authorization', `Bearer ${RPC_AUTH}`)
+const defaultProvider = new ethers.JsonRpcProvider(fetchRequest)
+const smartContract = new ethers.Contract(MINER_TO_PEERID_CONTRACT_ADDRESS, ABI, defaultProvider)
 
 const validPeerIdResponse = {
   peerID: '12D3KooWGQmdpbssrYHWFTwwbKmKL3i54EJC9j7RRNb47U9jUv1U',
@@ -17,7 +26,7 @@ function createMockContract(mockResponses) {
   return {
     getPeerData: async (minerId) => {
       const response = mockResponses[minerId]
-      return response ?? ''
+      return response ?? { peerID: '' }
     },
   }
 }
@@ -30,14 +39,12 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
       [minerId]: validPeerIdResponse,
     })
 
-    const actualPeerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, {
-      smartContract: mockContract,
-    })
+    const actualPeerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, mockContract)
 
     assert.deepStrictEqual(actualPeerId, validPeerIdResponse.peerID)
   })
   it('returns correct peer id for miner f03303347', async () => {
-    const peerId = await getIndexProviderPeerIdFromSmartContract('f03303347')
+    const peerId = await getIndexProviderPeerIdFromSmartContract('f03303347', smartContract)
     assert.deepStrictEqual(typeof peerId, 'string', 'Expected peerId to be a string')
     assert.deepStrictEqual(peerId, '12D3KooWJ91c6xQshrNe7QAXPFAaeRrHWq2UrgXGPf8UmMZMwyZ5')
   })
@@ -48,9 +55,7 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
       [minerId]: emptyPeerIdResponse,
     })
 
-    const actualPeerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, {
-      smartContract: mockContract,
-    })
+    const actualPeerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, mockContract)
 
     assert.deepStrictEqual(actualPeerId, '')
   })
@@ -58,7 +63,7 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
     await assert.rejects(
       async () => {
         // Call your async function that should throw
-        await getIndexProviderPeerIdFromSmartContract('abcdef')
+        await getIndexProviderPeerIdFromSmartContract('abcdef', smartContract)
       },
       (err) => {
         // Check if the error message contains the expected substring
@@ -68,15 +73,13 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
     )
   })
 
-  it('returns null for non-existent miner ID', async () => {
+  it('returns empty string for non-existent miner ID', async () => {
     // Create mock contract with predefined responses (empty to cause error)
     const mockContract = createMockContract({})
     const minerId = 99999
-    const peerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, {
-      smartContract: mockContract,
-    })
+    const peerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, mockContract)
 
-    assert.deepStrictEqual(peerId, null)
+    assert.deepStrictEqual(peerId, '')
   })
 
   it('properly strips f0 prefix', async () => {
@@ -90,9 +93,7 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
       },
     }
 
-    await getIndexProviderPeerIdFromSmartContract('f0123456', {
-      smartContract: mockContract,
-    })
+    await getIndexProviderPeerIdFromSmartContract('f0123456', mockContract)
 
     assert.deepStrictEqual(receivedMinerId, 123456)
   })
@@ -102,7 +103,27 @@ describe('getIndexProviderPeerIdFromSmartContract', () => {
     // This is a client ID not a miner ID so it will not exist in the smart contract
     // See: https://filecoin.tools/mainnet/deal/126288315
     const id = 'f03495400'
-    const peerId = await getIndexProviderPeerIdFromSmartContract(id)
+    const peerId = await getIndexProviderPeerIdFromSmartContract(id, smartContract)
     assert.deepStrictEqual(peerId, '')
+  })
+
+  it('returns error if smart contract call fails', async () => {
+    const mockContract = {
+      getPeerData: async () => {
+        throw new Error('SMART CONTRACT ERROR')
+      },
+    }
+    await assert.rejects(
+      async () => {
+        await getIndexProviderPeerIdFromSmartContract('f0123456', mockContract)
+      },
+      (err) => {
+        assert.ok(
+          err.cause.toString().includes('SMART CONTRACT ERROR'),
+          'Expected error message: SMART CONTRACT ERROR, got ' + err.cause,
+        )
+        return true
+      },
+    )
   })
 })
