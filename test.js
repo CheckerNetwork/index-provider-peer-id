@@ -2,7 +2,7 @@ import { getIndexProviderPeerIdFromSmartContract } from './lib/smart-contract-cl
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
 import { ethers } from 'ethers'
-import { MINER_TO_PEERID_CONTRACT_ADDRESS, ABI } from './lib/constants.js'
+import { MINER_TO_PEERID_CONTRACT_ADDRESS, ABI } from './index.js'
 
 export const { RPC_URL = 'https://api.node.glif.io/', RPC_AUTH } = process.env
 // Create a custom JsonRpcProvider with authorization header
