@@ -11,8 +11,7 @@ peer ID data.
 
 #### `MINER_TO_PEERID_CONTRACT_ADDRESS`
 
-The Ethereum address of the deployed MinerPeerIDMapping contract:
-`0x14183aD016Ddc83D638425D6328009aa390339Ce`
+The Ethereum address of the deployed MinerPeerIDMapping contract.
 
 #### Contract ABI
 
