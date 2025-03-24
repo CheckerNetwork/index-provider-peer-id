@@ -2,14 +2,18 @@ import { getIndexProviderPeerIdFromSmartContract } from '../lib/smart-contract-c
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
 import { ethers } from 'ethers'
-import { MINER_TO_PEERID_CONTRACT_ADDRESS, ABI } from '../index.js'
+import { MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from '../index.js'
 
 export const { RPC_URL = 'https://api.node.glif.io/', RPC_AUTH } = process.env
 // Create a custom JsonRpcProvider with authorization header
 const fetchRequest = new ethers.FetchRequest(RPC_URL)
 fetchRequest.setHeader('Authorization', `Bearer ${RPC_AUTH}`)
 const defaultProvider = new ethers.JsonRpcProvider(fetchRequest)
-const smartContract = new ethers.Contract(MINER_TO_PEERID_CONTRACT_ADDRESS, ABI, defaultProvider)
+const smartContract = new ethers.Contract(
+  MINER_TO_PEERID_CONTRACT_ADDRESS,
+  MINER_TO_PEERID_CONTRACT_ABI,
+  defaultProvider,
+)
 
 const validPeerIdResponse = {
   peerID: '12D3KooWGQmdpbssrYHWFTwwbKmKL3i54EJC9j7RRNb47U9jUv1U',
