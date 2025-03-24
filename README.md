@@ -15,8 +15,7 @@ The Ethereum address of the deployed MinerPeerIDMapping contract.
 
 #### Contract ABI
 
-The ABI required to fetch peer ID and signature data
-for a given miner ID.
+The ABI required to fetch peer ID and signature data for a given miner ID.
 
 For more information:
 
