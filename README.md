@@ -11,17 +11,11 @@ peer ID data.
 
 #### `MINER_TO_PEERID_CONTRACT_ADDRESS`
 
-The Ethereum address of the deployed MinerPeerIDMapping contract:
-`0x14183aD016Ddc83D638425D6328009aa390339Ce`
+The Ethereum address of the deployed MinerPeerIDMapping contract.
 
 #### Contract ABI
 
-The minimal ABI containing just the `getPeerData` method used to fetch peer ID and signature data
-for a given miner ID:
-
-```solidity
-function getPeerData(uint64 minerID) view returns (tuple(string peerID, bytes signature))
-```
+The ABI required to fetch peer ID and signature data for a given miner ID.
 
 For more information:
 
