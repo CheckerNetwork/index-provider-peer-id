@@ -15,7 +15,7 @@ jobs:
       - run: npm ci
       - run: npm run test:unit
         env:
-          RPC_AUTH: ${{secrets.GLIF_API_TOKEN}}
+          RPC_AUTH: ${{secrets.RPC_AUTH}}
 
   lint:
     runs-on: ubuntu-latest
