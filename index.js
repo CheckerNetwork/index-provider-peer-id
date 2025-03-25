@@ -1,16 +1,35 @@
+import { getIndexProviderPeerIdFromSmartContract } from './lib/smart-contract-client.js'
+import { getIndexProviderPeerIdFromFilecoinMinerInfo } from './lib/filecoin-rpc-client.js'
+import { rpc } from './lib/rpc-client.js'
 export { MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from './lib/constants.js'
+
 /**
  * @param {string} minerId A miner actor id, e.g. `f0142637`
+ * @param {import('ethers').Contract} smartContract The smart contract instance
  * @param {object} options
  * @param {number} [options.maxAttempts]
+ * @param {string} [options.rpcUrl]
+ * @param {string} [options.rpcAuth]
+ * @param {(method:string,params:unknown[])=> Promise<unknown> } [options.rpcFn] The RPC function to use
  * @returns {Promise<string>} Miner's PeerId, e.g. `12D3KooWMsPmAA65yHAHgbxgh7CPkEctJHZMeM3rAvoW8CZKxtpG`
  */
-export async function getIndexProviderPeerId (minerId, { maxAttempts = 5, smartContract, rpcFn } = {}) {
+export async function getIndexProviderPeerId(
+  minerId,
+  smartContract,
+  {
+    maxAttempts = 5,
+    rpcUrl = 'https://api.node.glif.io/',
+    rpcAuth,
+    rpcFn = async (method, params) => {
+      return await rpc(method, params, { rpcUrl, rpcAuth })
+    },
+  } = {},
+) {
   try {
-  // Make a concurrent request to both sources: FilecoinMinerInfo and smart contract
+    // Make a concurrent request to both sources: FilecoinMinerInfo and smart contract
     const [minerInfoResult, contractResult] = await Promise.all([
       getIndexProviderPeerIdFromFilecoinMinerInfo(minerId, { maxAttempts, rpcFn }),
-      getIndexProviderPeerIdFromSmartContract(minerId, { smartContract })
+      getIndexProviderPeerIdFromSmartContract(minerId, smartContract),
     ])
     // Check contract result first
     if (contractResult) {
@@ -25,19 +44,13 @@ export async function getIndexProviderPeerId (minerId, { maxAttempts = 5, smartC
     }
 
     // Handle the case where both failed
-    throw new Error(`Failed to obtain Miner's Index Provider PeerID.\nSmartContract query result: ${contractResult}\nStateMinerInfo query result: ${minerInfoResult}`)
+    throw new Error(
+      `Failed to obtain Miner's Index Provider PeerID.\nSmartContract query result: ${contractResult}\nStateMinerInfo query result: ${minerInfoResult}`,
+    )
   } catch (error) {
     console.error('Error fetching PeerID:', error)
     throw Error(`Error fetching PeerID for miner ${minerId}.`, {
-      cause: error
+      cause: error,
     })
   }
 }
-
-function getIndexProviderPeerIdFromFilecoinMinerInfo(minerId, arg1) {
-  throw new Error('Function not implemented.')
-}
-function getIndexProviderPeerIdFromSmartContract(minerId, arg1) {
-  throw new Error('Function not implemented.')
-}
-
