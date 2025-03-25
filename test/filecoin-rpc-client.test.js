@@ -4,6 +4,7 @@ import {
   getChainHead,
   getIndexProviderPeerIdFromFilecoinMinerInfo,
 } from '../lib/filecoin-rpc-client.js'
+import { rpc } from '../lib/rpc-client.js'
 
 const { RPC_URL = 'https://api.node.glif.io/', RPC_AUTH } = process.env
 
@@ -17,7 +18,7 @@ describe('getChainHead', () => {
       return { Cids: mockCids }
     }
 
-    const result = await getChainHead(RPC_URL, RPC_AUTH, { rpcFn: mockRpcFn })
+    const result = await getChainHead({ rpcFn: mockRpcFn })
     assert.deepStrictEqual(result, mockCids)
   })
 
@@ -34,7 +35,7 @@ describe('getChainHead', () => {
       return { Cids: ['bafy2bzaceCID'] }
     }
 
-    const result = await getChainHead(RPC_URL, RPC_AUTH, { rpcFn: mockRpcFn, maxAttempts: 5 })
+    const result = await getChainHead({ rpcFn: mockRpcFn, maxAttempts: 5 })
     assert.deepStrictEqual(result, ['bafy2bzaceCID'])
     assert.strictEqual(callCount, 3, 'Function should have been called 3 times')
   })
@@ -46,7 +47,7 @@ describe('getChainHead', () => {
 
     await assert.rejects(
       async () => {
-        await getChainHead(RPC_URL, RPC_AUTH, { rpcFn: mockRpcFn, maxAttempts: 3 })
+        await getChainHead({ rpcFn: mockRpcFn, maxAttempts: 3 })
       },
       {
         message: 'Error fetching ChainHead.',
@@ -62,7 +63,7 @@ describe('getChainHead', () => {
 
     await assert.rejects(
       async () => {
-        await getChainHead(RPC_URL, RPC_AUTH, { rpcFn: mockRpcFn, maxAttempts: 1 })
+        await getChainHead({ rpcFn: mockRpcFn, maxAttempts: 1 })
       },
       (err) => {
         assert.strictEqual(err.message, 'Error fetching ChainHead.')
@@ -72,7 +73,11 @@ describe('getChainHead', () => {
     )
   })
   it('correctly fetches real chain head', async () => {
-    const result = await getChainHead(RPC_URL, RPC_AUTH)
+    const result = await getChainHead({
+      rpcFn: async (method, params) => {
+        return await rpc(method, params, { rpcUrl: RPC_URL, rpcAuth: RPC_AUTH })
+      },
+    })
     assert.ok(Array.isArray(result))
     assert.ok(result.length > 0)
     assert.ok(result[0]['/'].startsWith('bafy'))
@@ -96,14 +101,9 @@ describe('getIndexProviderPeerIdFromFilecoinMinerInfo', () => {
       throw new Error(`Unexpected method: ${method}`)
     }
 
-    const result = await getIndexProviderPeerIdFromFilecoinMinerInfo(
-      'f0142637',
-      RPC_URL,
-      RPC_AUTH,
-      {
-        rpcFn: mockRpcFn,
-      },
-    )
+    const result = await getIndexProviderPeerIdFromFilecoinMinerInfo('f0142637', {
+      rpcFn: mockRpcFn,
+    })
     assert.strictEqual(result, mockPeerId)
   })
 
@@ -125,15 +125,10 @@ describe('getIndexProviderPeerIdFromFilecoinMinerInfo', () => {
       }
     }
 
-    const result = await getIndexProviderPeerIdFromFilecoinMinerInfo(
-      'f0142637',
-      RPC_URL,
-      RPC_AUTH,
-      {
-        rpcFn: mockRpcFn,
-        maxAttempts: 5,
-      },
-    )
+    const result = await getIndexProviderPeerIdFromFilecoinMinerInfo('f0142637', {
+      rpcFn: mockRpcFn,
+      maxAttempts: 5,
+    })
 
     assert.strictEqual(result, '12D3KooWMsPmAA65yHAHgbxgh7CPkEctJHZMeM3rAvoW8CZKxtpG')
     assert.strictEqual(stateMinerInfoCallCount, 3, 'StateMinerInfo should have been called 3 times')
@@ -148,7 +143,7 @@ describe('getIndexProviderPeerIdFromFilecoinMinerInfo', () => {
 
     await assert.rejects(
       async () => {
-        await getIndexProviderPeerIdFromFilecoinMinerInfo('f0142637', RPC_URL, RPC_AUTH, {
+        await getIndexProviderPeerIdFromFilecoinMinerInfo('f0142637', {
           rpcFn: mockRpcFn,
           maxAttempts: 2,
         })
@@ -172,7 +167,7 @@ describe('getIndexProviderPeerIdFromFilecoinMinerInfo', () => {
 
     await assert.rejects(
       async () => {
-        await getIndexProviderPeerIdFromFilecoinMinerInfo('f0142637', RPC_URL, RPC_AUTH, {
+        await getIndexProviderPeerIdFromFilecoinMinerInfo('f0142637', {
           rpcFn: mockRpcFn,
           maxAttempts: 2,
         })
@@ -197,7 +192,7 @@ describe('getIndexProviderPeerIdFromFilecoinMinerInfo', () => {
 
     await assert.rejects(
       async () => {
-        await getIndexProviderPeerIdFromFilecoinMinerInfo('f0142637', RPC_URL, RPC_AUTH, {
+        await getIndexProviderPeerIdFromFilecoinMinerInfo('f0142637', {
           rpcFn: mockRpcFn,
           maxAttempts: 1,
         })
@@ -211,7 +206,11 @@ describe('getIndexProviderPeerIdFromFilecoinMinerInfo', () => {
   })
 
   it('should correctly fetch read peer ID for miner f03303347', async () => {
-    const peerId = await getIndexProviderPeerIdFromFilecoinMinerInfo('f03303347', RPC_URL, RPC_AUTH)
+    const peerId = await getIndexProviderPeerIdFromFilecoinMinerInfo('f03303347', {
+      rpcFn: async (method, params) => {
+        return await rpc(method, params, { rpcUrl: RPC_URL, rpcAuth: RPC_AUTH })
+      },
+    })
     assert.deepStrictEqual(typeof peerId, 'string', 'Expected peerId to be a string')
     assert.deepStrictEqual(peerId, '12D3KooWCtiN7tAjeLKL4mashteXdH4htUrzWu8bWN9kDU3qbKjQ')
   })

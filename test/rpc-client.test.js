@@ -27,7 +27,11 @@ describe('rpc client', () => {
       }
     }
 
-    const result = await rpc('test.method', ['param1'], RPC_URL, RPC_AUTH, { fetch: mockFetch })
+    const result = await rpc('test.method', ['param1'], {
+      fetch: mockFetch,
+      rpcUrl: RPC_URL,
+      rpcAuth: RPC_AUTH,
+    })
     assert.deepStrictEqual(result, expectedResult)
   })
 
@@ -37,7 +41,7 @@ describe('rpc client', () => {
     })
 
     await assert.rejects(
-      () => rpc('test.method', [], RPC_URL, RPC_AUTH, { fetch: mockFetch }),
+      () => rpc('test.method', [], { fetch: mockFetch, rpcUrl: RPC_URL, rpcAuth: RPC_AUTH }),
       (err) => {
         assert.ok(err instanceof FilecoinRpcError)
         assert.strictEqual(err.name, INVALID_RPC_RESPONSE)
@@ -54,7 +58,7 @@ describe('rpc client', () => {
     })
 
     await assert.rejects(
-      () => rpc('test.method', [], RPC_URL, RPC_AUTH, { fetch: mockFetch }),
+      () => rpc('test.method', [], { fetch: mockFetch, rpcUrl: RPC_URL, rpcAuth: RPC_AUTH }),
       (err) => {
         assert.ok(err instanceof FilecoinRpcError)
         assert.strictEqual(err.name, RPC_ERROR)
@@ -77,7 +81,7 @@ describe('rpc client', () => {
     }
 
     await assert.rejects(
-      () => rpc('test.method', [], RPC_URL, RPC_AUTH, { fetch: mockFetch }),
+      () => rpc('test.method', [], { fetch: mockFetch, rpcUrl: RPC_URL, rpcAuth: RPC_AUTH }),
       (err) => {
         assert.ok(
           err instanceof FilecoinRpcError,
