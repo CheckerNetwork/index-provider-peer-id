@@ -14,7 +14,7 @@ const smartContract = new ethers.Contract(
   MINER_TO_PEERID_CONTRACT_ABI,
   defaultProvider,
 )
-
+console.log('RPC_AUTH', RPC_AUTH)
 const validPeerIdResponse = {
   peerID: '12D3KooWGQmdpbssrYHWFTwwbKmKL3i54EJC9j7RRNb47U9jUv1U',
   signature: '0x1234567890abcdef',

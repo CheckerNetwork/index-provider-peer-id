@@ -11,23 +11,13 @@ peer ID data.
 
 #### `MINER_TO_PEERID_CONTRACT_ADDRESS`
 
-The Ethereum address of the deployed MinerPeerIDMapping contract:
-`0x14183aD016Ddc83D638425D6328009aa390339Ce`
+The Ethereum address of the deployed MinerPeerIDMapping contract.
 
 #### Contract ABI
 
-The minimal ABI containing just the `getPeerData` method used to fetch peer ID and signature data
-for a given miner ID:
+The ABI required to fetch peer ID and signature data for a given miner ID.
 
-```solidity
-function getPeerData(uint64 minerID) view returns (tuple(string peerID, bytes signature))
-```
-
-For more information: <<<<<<< HEAD
-
-- [Smart Contract Documentation](https://github.com/filecoin-project/curio/blob/395bc47d0f585cbc869fd4671dc05b1b2f4b18c2/market/ipni/spark/sol/README.md)
-- # [Technical Background](https://docs.curiostorage.org/curio-market/ipni-interplanetary-network-indexer-provider#ipni-provider-identification)
+For more information:
 
 - [Smart Contract Documentation](https://github.com/filecoin-project/curio/blob/395bc47d0f585cbc869fd4671dc05b1b2f4b18c2/market/ipni/spark/sol/README.md)
 - [Technical Background](https://docs.curiostorage.org/curio-market/ipni-interplanetary-network-indexer-provider#ipni-provider-identification)
-  > > > > > > > nhaimerl-peer-id-smart-contract-lookup

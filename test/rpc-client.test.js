@@ -7,7 +7,8 @@ import {
   NO_RESULT_IN_RESPONSE,
   RPC_ERROR,
 } from '../lib/errors.js'
-import { RPC_URL } from './smart-contract-client.test.js'
+
+export const { RPC_URL = 'https://api.node.glif.io/', RPC_AUTH } = process.env
 
 describe('rpc client', () => {
   it('makes successful RPC calls', async () => {
@@ -26,7 +27,7 @@ describe('rpc client', () => {
       }
     }
 
-    const result = await rpc('test.method', ['param1'], RPC_URL, RPC_URL, { fetch: mockFetch })
+    const result = await rpc('test.method', ['param1'], RPC_URL, RPC_AUTH, { fetch: mockFetch })
     assert.deepStrictEqual(result, expectedResult)
   })
 
@@ -36,7 +37,7 @@ describe('rpc client', () => {
     })
 
     await assert.rejects(
-      () => rpc('test.method', [], RPC_URL, RPC_URL, { fetch: mockFetch }),
+      () => rpc('test.method', [], RPC_URL, RPC_AUTH, { fetch: mockFetch }),
       (err) => {
         assert.ok(err instanceof FilecoinRpcError)
         assert.strictEqual(err.name, INVALID_RPC_RESPONSE)
@@ -53,7 +54,7 @@ describe('rpc client', () => {
     })
 
     await assert.rejects(
-      () => rpc('test.method', [], RPC_URL, RPC_URL, { fetch: mockFetch }),
+      () => rpc('test.method', [], RPC_URL, RPC_AUTH, { fetch: mockFetch }),
       (err) => {
         assert.ok(err instanceof FilecoinRpcError)
         assert.strictEqual(err.name, RPC_ERROR)
@@ -76,7 +77,7 @@ describe('rpc client', () => {
     }
 
     await assert.rejects(
-      () => rpc('test.method', [], RPC_URL, RPC_URL, { fetch: mockFetch }),
+      () => rpc('test.method', [], RPC_URL, RPC_AUTH, { fetch: mockFetch }),
       (err) => {
         assert.ok(
           err instanceof FilecoinRpcError,
