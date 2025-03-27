@@ -26,7 +26,7 @@ export async function getIndexProviderPeerId(
   } = {},
 ) {
   try {
-    // Make a concurrent request to both sources: FilecoinMinerInfo and smart contract
+    // Make concurrent requests to both sources: FilecoinMinerInfo and smart contract
     const [contractResult , minerInfoResult] = await Promise.all([
       getIndexProviderPeerIdFromSmartContract(minerId, smartContract),
       getIndexProviderPeerIdFromFilecoinMinerInfo(minerId, rpcFn, { maxAttempts }),
