@@ -41,8 +41,8 @@ const peerIdWithOptions = await getIndexProviderPeerId(minerId, contract, {
 ```
 
 The function prioritizes the smart contract result. If the smart contract doesn't return a valid
-PeerId, it falls back to the result from FilecoinMinerInfo. If both methods fail, an error is thrown with
-details about the failure.
+PeerId, it falls back to the result from FilecoinMinerInfo. If both methods fail, an error is thrown
+with details about the failure.
 
 ### Parameters
 
