@@ -11,15 +11,12 @@ contract and FilecoinMinerInfo. It will automatically try both sources and retur
 result.
 
 ```js
-    maxAttempts = 5,
 import { getIndexProviderPeerId, MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from '@filecoin-station/index-provider-peer-id';
 import { ethers } from 'ethers';
 
 // Initialize your ethers contract instance
 const provider = new ethers.providers.JsonRpcProvider('https://eth.example.com');
-const contractAddress = MINER_TO_PEERID_CONTRACT_ADDRESS;
-const contractAbi = MINER_TO_PEERID_CONTRACT_ABI;
-const contract = new ethers.Contract(contractAddress, contractAbi, provider);
+const contract = new ethers.Contract(MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI, provider);
 
 // Basic usage
 const minerId = 'f0142637';
