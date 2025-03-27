@@ -49,7 +49,7 @@ export async function getIndexProviderPeerId(
     )
   } catch (error) {
     console.error('Error fetching PeerID:', error)
-    throw Error(`Error fetching PeerID for miner ${minerId}.`, {
+    throw Error(`Error fetching index provider PeerID for miner ${minerId}.`, {
       cause: error,
     })
   }
