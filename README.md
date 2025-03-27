@@ -7,8 +7,7 @@ Functionality for fetching index provider peer IDs for a minder id on the Fileco
 ### Getting a Miner's PeerId
 
 The library provides a function to retrieve a miner's PeerId by querying both the Filecoin smart
-contract and FilecoinMinerInfo. It will automatically try both sources and return the first valid
-result.
+contract and Filecoin MinerInfo state. It returns the PeerID found in the smart contract, falling back to the PeerID found in MinerInfo state.
 
 ```js
 import {
