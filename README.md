@@ -52,9 +52,37 @@ details about the failure.
   - `maxAttempts`: Number of retry attempts for RPC calls (default: 5)
   - `rpcUrl`: Filecoin RPC endpoint URL (default: 'https://api.node.glif.io/')
   - `rpcAuth`: Authorization token for RPC endpoint (if required)
-  - `rpcFn`: Custom function for making RPC calls. If not provided the default rpc function with the
-    provided rpcUrl and rpcAuth will be used. If not rpcURL is provided, the default rpc function
-    will use 'https://api.node.glif.io/' as the default rpcURL.
+  - `rpcFn`: Custom function for making RPC calls.
+
+#### Custom RPC Function
+
+- `rpcFn`: Custom function for making RPC calls to the Filecoin network. If provided, it overrides
+  the default RPC implementation. This function should match the following signature:
+
+  ```typescript
+  async function rpcFn(
+    method: string,
+    params: any[],
+    options?: {
+      rpcUrl?: string
+      rpcAuth?: string
+    },
+  ): Promise<any>
+  ```
+
+  The function receives:
+
+  - `method`: The RPC method name to call
+  - `params`: An array of parameters for the method
+  - `options`: Optional object containing:
+    - `rpcUrl`: The Filecoin RPC endpoint URL
+    - `rpcAuth`: Authorization token for the RPC endpoint
+
+  It should return a Promise that resolves to the RPC response's result field.
+
+  If not provided, the default RPC function will be used with the specified `rpcUrl` and `rpcAuth`.
+  The default implementation uses 'https://api.node.glif.io/' as the RPC endpoint if no `rpcUrl` is
+  provided and it uses no authentication (rpcAuth is undefined).
 
 ### Return Value
 
