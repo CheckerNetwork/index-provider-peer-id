@@ -74,7 +74,7 @@ describe('getChainHead', () => {
   })
   it('correctly fetches real chain head', async () => {
     const result = await getChainHead(async (method, params) => {
-      return await rpc(method, params, { rpcUrl: RPC_URL, rpcAuth: RPC_AUTH })
+      return await rpc(method, params, RPC_URL, { rpcAuth: RPC_AUTH })
     })
     assert.ok(Array.isArray(result))
     assert.ok(result.length > 0)
@@ -201,7 +201,7 @@ describe('getIndexProviderPeerIdFromFilecoinMinerInfo', () => {
     const peerId = await getIndexProviderPeerIdFromFilecoinMinerInfo(
       'f03303347',
       async (method, params) => {
-        return await rpc(method, params, { rpcUrl: RPC_URL, rpcAuth: RPC_AUTH })
+        return await rpc(method, params, RPC_URL, { rpcAuth: RPC_AUTH })
       },
     )
     assert.deepStrictEqual(typeof peerId, 'string', 'Expected peerId to be a string')
