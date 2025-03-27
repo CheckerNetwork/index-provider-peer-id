@@ -11,7 +11,6 @@ contract and FilecoinMinerInfo. It will automatically try both sources and retur
 result.
 
 ```js
-    maxAttempts = 5,
 import { getIndexProviderPeerId, MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from '@filecoin-station/index-provider-peer-id';
 import { ethers } from 'ethers';
 
