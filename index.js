@@ -21,7 +21,7 @@ export async function getIndexProviderPeerId(
     rpcUrl = 'https://api.node.glif.io/',
     rpcAuth,
     rpcFn = async (method, params) => {
-      return await rpc(method, params, { rpcUrl, rpcAuth })
+      return await rpc(method, params, rpcUrl, { rpcAuth })
     },
   } = {},
 ) {
@@ -48,7 +48,7 @@ export async function getIndexProviderPeerId(
       `Failed to obtain Miner's Index Provider PeerID.\nSmartContract query result: ${contractResult}\nStateMinerInfo query result: ${minerInfoResult}`,
     )
   } catch (error) {
-    throw Error(`Error fetching PeerID for miner ${minerId}.`, {
+    throw Error(`Error fetching index provider PeerID for miner ${minerId}.`, {
       cause: error,
     })
   }
