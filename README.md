@@ -11,25 +11,33 @@ contract and FilecoinMinerInfo. It will automatically try both sources and retur
 result.
 
 ```js
-import { getIndexProviderPeerId, MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from '@filecoin-station/index-provider-peer-id';
-import { ethers } from 'ethers';
+import {
+  getIndexProviderPeerId,
+  MINER_TO_PEERID_CONTRACT_ADDRESS,
+  MINER_TO_PEERID_CONTRACT_ABI,
+} from '@filecoin-station/index-provider-peer-id'
+import { ethers } from 'ethers'
 
 // Initialize your ethers contract instance
-const provider = new ethers.providers.JsonRpcProvider('https://eth.example.com');
-const contract = new ethers.Contract(MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI, provider);
+const provider = new ethers.providers.JsonRpcProvider('https://eth.example.com')
+const contract = new ethers.Contract(
+  MINER_TO_PEERID_CONTRACT_ADDRESS,
+  MINER_TO_PEERID_CONTRACT_ABI,
+  provider,
+)
 
 // Basic usage
-const minerId = 'f0142637';
-const peerId = await getIndexProviderPeerId(minerId, contract);
-console.log(peerId); // e.g., '12D3KooWMsPmAA65yHAHgbxgh7CPkEctJHZMeM3rAvoW8CZKxtpG'
+const minerId = 'f0142637'
+const peerId = await getIndexProviderPeerId(minerId, contract)
+console.log(peerId) // e.g., '12D3KooWMsPmAA65yHAHgbxgh7CPkEctJHZMeM3rAvoW8CZKxtpG'
 
 // Advanced usage with options
 const peerIdWithOptions = await getIndexProviderPeerId(minerId, contract, {
-  maxAttempts: 3,                             // Number of retry attempts (default: 5)
-  rpcUrl: 'https://custom-filecoin-api.com',  // Custom Filecoin RPC endpoint (default: 'https://api.node.glif.io/')
-  rpcAuth: 'your-auth-token',                 // Optional authorization token for RPC
-  rpcFn: customRpcFunction                    // Optional custom RPC function implementation.
-});
+  maxAttempts: 3, // Number of retry attempts (default: 5)
+  rpcUrl: 'https://custom-filecoin-api.com', // Custom Filecoin RPC endpoint (default: 'https://api.node.glif.io/')
+  rpcAuth: 'your-auth-token', // Optional authorization token for RPC
+  rpcFn: customRpcFunction, // Optional custom RPC function implementation.
+})
 ```
 
 The function prioritizes the smart contract result. If the smart contract doesn't return a valid
