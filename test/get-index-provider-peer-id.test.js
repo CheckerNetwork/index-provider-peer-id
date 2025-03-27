@@ -39,8 +39,8 @@ function createMockContract(mockResponses) {
 
 describe('getIndexProviderPeerId', () => {
   it('returns correct peer id for miner f03303347', async () => {
-    const peerId = await getIndexProviderPeerId('f03303347', smartContract)
-
+    const { peerId, source } = await getIndexProviderPeerId('f03303347', smartContract)
+    assert(source === 'smartContract', 'Expected source to be smartContract')
     assert(typeof peerId === 'string', 'Expected peerId to be a string')
     assert.deepStrictEqual(peerId, '12D3KooWJ91c6xQshrNe7QAXPFAaeRrHWq2UrgXGPf8UmMZMwyZ5')
   })
@@ -50,7 +50,11 @@ describe('getIndexProviderPeerId', () => {
     const mockContract = createMockContract({
       [minerId]: validPeerIdResponse,
     })
-    const actualPeerId = await getIndexProviderPeerId(`f0${minerId}`, mockContract)
+    const { peerId: actualPeerId, source } = await getIndexProviderPeerId(
+      `f0${minerId}`,
+      mockContract,
+    )
+    assert(source === 'smartContract', 'Expected source to be smartContract')
     assert.deepStrictEqual(actualPeerId, validPeerIdResponse.peerID)
   })
 
@@ -61,7 +65,7 @@ describe('getIndexProviderPeerId', () => {
     const mockContract = createMockContract({
       [minerId]: emptyPeerIdResponse,
     })
-    const actualPeerId = await getIndexProviderPeerId(`f0${minerId}`, mockContract, {
+    const { peerId: actualPeerId } = await getIndexProviderPeerId(`f0${minerId}`, mockContract, {
       rpcFn: () => Promise.resolve({ PeerId: validPeerIdResponse.peerID }),
     })
     assert.deepStrictEqual(actualPeerId, validPeerIdResponse.peerID)
@@ -72,7 +76,7 @@ describe('getIndexProviderPeerId', () => {
     const mockContract = createMockContract({
       [minerId]: { peerID: undefined },
     })
-    const actualPeerId = await getIndexProviderPeerId(`f0${minerId}`, mockContract, {
+    const { peerId: actualPeerId } = await getIndexProviderPeerId(`f0${minerId}`, mockContract, {
       rpcFn: () => Promise.resolve({ PeerId: validPeerIdResponse.peerID }),
     })
     assert.deepStrictEqual(actualPeerId, validPeerIdResponse.peerID)

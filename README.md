@@ -28,11 +28,12 @@ const contract = new ethers.Contract(
 
 // Basic usage
 const minerId = 'f0142637'
-const peerId = await getIndexProviderPeerId(minerId, contract)
+const { peerId, source } = await getIndexProviderPeerId(minerId, contract)
 console.log(peerId) // e.g., '12D3KooWMsPmAA65yHAHgbxgh7CPkEctJHZMeM3rAvoW8CZKxtpG'
+console.log(source) // 'smartContract' or 'filecoinMinerInfo'
 
 // Advanced usage with options
-const peerIdWithOptions = await getIndexProviderPeerId(minerId, contract, {
+const { peerId, source } = await getIndexProviderPeerId(minerId, contract, {
   maxAttempts: 3, // Number of retry attempts (default: 5)
   rpcUrl: 'https://custom-filecoin-api.com', // Custom Filecoin RPC endpoint (default: 'https://api.node.glif.io/')
   rpcAuth: 'your-auth-token', // Optional authorization token for RPC

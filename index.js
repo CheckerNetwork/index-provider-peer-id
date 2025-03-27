@@ -11,7 +11,7 @@ export { MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from '
  * @param {string} [options.rpcUrl]
  * @param {string} [options.rpcAuth]
  * @param {(method:string,params:unknown[])=> Promise<unknown> } [options.rpcFn] The RPC function to use
- * @returns {Promise<string>} Miner's PeerId, e.g. `12D3KooWMsPmAA65yHAHgbxgh7CPkEctJHZMeM3rAvoW8CZKxtpG`
+ * @returns {Promise<{ peerId: string, source: 'smartContract'|'filecoinMinerInfo' }>} Miner's PeerId, e.g. `12D3KooWMsPmAA65yHAHgbxgh7CPkEctJHZMeM3rAvoW8CZKxtpG` and the source of the data
  */
 export async function getIndexProviderPeerId(
   minerId,
@@ -34,13 +34,13 @@ export async function getIndexProviderPeerId(
     // Check contract result first
     if (contractResult) {
       console.log('Using PeerID from the smart contract.')
-      return contractResult
+      return { peerId: contractResult, source: 'smartContract' }
     }
 
     // Fall back to FilecoinMinerInfo result
     if (minerInfoResult) {
       console.log('Using PeerID from FilecoinMinerInfo.')
-      return minerInfoResult
+      return { peerId: minerInfoResult, source: 'filecoinMinerInfo' }
     }
 
     // Handle the case where both failed
