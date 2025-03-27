@@ -11,7 +11,7 @@ export { MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from '
  * @param {string} [options.rpcUrl]
  * @param {string} [options.rpcAuth]
  * @param {(method:string,params:unknown[])=> Promise<unknown> } [options.rpcFn] The RPC function to use
- * @returns {Promise<{ peerId: string, source: 'smartContract'|'filecoinMinerInfo' }>} Miner's PeerId, e.g. `12D3KooWMsPmAA65yHAHgbxgh7CPkEctJHZMeM3rAvoW8CZKxtpG` and the source of the data
+ * @returns {Promise<{ peerId: string, source: 'smartContract'|'minerInfo' }>} Miner's PeerId, e.g. `12D3KooWMsPmAA65yHAHgbxgh7CPkEctJHZMeM3rAvoW8CZKxtpG` and the source of the data
  */
 export async function getIndexProviderPeerId(
   minerId,
@@ -40,7 +40,7 @@ export async function getIndexProviderPeerId(
     // Fall back to FilecoinMinerInfo result
     if (minerInfoResult) {
       console.log('Using PeerID from FilecoinMinerInfo.')
-      return { peerId: minerInfoResult, source: 'filecoinMinerInfo' }
+      return { peerId: minerInfoResult, source: 'minerInfo' }
     }
 
     // Handle the case where both failed
@@ -48,7 +48,6 @@ export async function getIndexProviderPeerId(
       `Failed to obtain Miner's Index Provider PeerID.\nSmartContract query result: ${contractResult}\nStateMinerInfo query result: ${minerInfoResult}`,
     )
   } catch (error) {
-    console.error('Error fetching PeerID:', error)
     throw Error(`Error fetching PeerID for miner ${minerId}.`, {
       cause: error,
     })

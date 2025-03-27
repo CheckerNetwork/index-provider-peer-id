@@ -10,6 +10,10 @@ The library provides a function to retrieve a miner's PeerId by querying both th
 contract and FilecoinMinerInfo. It will automatically try both sources and return the first valid
 result.
 
+The function prioritizes the smart contract result. If the smart contract doesn't return a valid
+PeerId, it falls back to the result from FilecoinMinerInfo. If both methods fail, an error is thrown
+with details about the failure.
+
 ```js
 import {
   getIndexProviderPeerId,
@@ -30,7 +34,7 @@ const contract = new ethers.Contract(
 const minerId = 'f0142637'
 const { peerId, source } = await getIndexProviderPeerId(minerId, contract)
 console.log(peerId) // e.g., '12D3KooWMsPmAA65yHAHgbxgh7CPkEctJHZMeM3rAvoW8CZKxtpG'
-console.log(source) // 'smartContract' or 'filecoinMinerInfo'
+console.log(source) // 'smartContract' or 'minerInfo'
 
 // Advanced usage with options
 const { peerId, source } = await getIndexProviderPeerId(minerId, contract, {
@@ -40,10 +44,6 @@ const { peerId, source } = await getIndexProviderPeerId(minerId, contract, {
   rpcFn: customRpcFunction, // Optional custom RPC function implementation.
 })
 ```
-
-The function prioritizes the smart contract result. If the smart contract doesn't return a valid
-PeerId, it falls back to the result from FilecoinMinerInfo. If both methods fail, an error is thrown
-with details about the failure.
 
 ### Parameters
 
@@ -58,7 +58,8 @@ with details about the failure.
 #### Custom RPC Function
 
 - `rpcFn`: Custom function for making RPC calls to the Filecoin network. If provided, it overrides
-  the default RPC implementation. This function should match the following signature:
+  the default RPC implementation. The smart-contract lookup will keep using the Ethers.js Provider
+  attached to the smartContract. This function should match the following signature:
 
   ```typescript
   async function rpcFn(
