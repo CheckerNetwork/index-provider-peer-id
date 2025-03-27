@@ -78,7 +78,7 @@ For more information:
 
 ## Publish
 
-Publish a new version of `@filecoin-station/spark-evaluate`:
+Publish a new version of `index-provider-peer-id` to npm with the following command:
 
 ```bash
 $ npm run release
