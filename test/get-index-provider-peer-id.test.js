@@ -66,7 +66,6 @@ describe('getIndexProviderPeerId', () => {
       [minerId]: emptyPeerIdResponse,
     })
     const { peerId: actualPeerId } = await getIndexProviderPeerId(`f0${minerId}`, mockContract, {
-      rpcUrl: undefined,
       rpcFn: () => Promise.resolve({ PeerId: validPeerIdResponse.peerID }),
     })
     assert.deepStrictEqual(actualPeerId, validPeerIdResponse.peerID)
@@ -78,7 +77,6 @@ describe('getIndexProviderPeerId', () => {
       [minerId]: { peerID: undefined },
     })
     const { peerId: actualPeerId } = await getIndexProviderPeerId(`f0${minerId}`, mockContract, {
-      rpcUrl: undefined,
       rpcFn: () => Promise.resolve({ PeerId: validPeerIdResponse.peerID }),
     })
     assert.deepStrictEqual(actualPeerId, validPeerIdResponse.peerID)
@@ -92,7 +90,6 @@ describe('getIndexProviderPeerId', () => {
     await assert.rejects(
       async () => {
         await getIndexProviderPeerId(`f0${minerId}`, smartContract, {
-          rpcUrl: undefined,
           rpcFn: () => {
             throw Error('MINER INFO ERROR')
           },
@@ -113,7 +110,6 @@ describe('getIndexProviderPeerId', () => {
     await assert.rejects(
       async () => {
         await getIndexProviderPeerId(`f0${minerId}`, smartContract, {
-          rpcUrl: undefined,
           rpcFn: () => Promise.resolve({ PeerId: validPeerIdResponse.peerID }),
         })
       },
@@ -132,7 +128,6 @@ describe('getIndexProviderPeerId', () => {
     await assert.rejects(
       async () => {
         await getIndexProviderPeerId(`f0${minerId}`, mockContract, {
-          rpcUrl: undefined,
           rpcFn: () => {
             throw Error('MINER INFO ERROR')
           },

@@ -17,21 +17,21 @@ export { MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from '
 export async function getIndexProviderPeerId(
   minerId,
   smartContract,
-  {
-    maxAttempts = 5,
-    rpcUrl = 'https://api.node.glif.io/',
-    rpcAuth,
-    rpcFn = async (method, params) => {
-      return await rpc(method, params, rpcUrl, { rpcAuth })
-    },
-  } = {},
+  { maxAttempts = 5, rpcUrl, rpcAuth, rpcFn } = {},
 ) {
   try {
     assert.ok(!(rpcUrl && rpcFn), 'Cannot provide both rpcUrl and rpcFn')
     // Make concurrent requests to both sources: FilecoinMinerInfo and smart contract
     const [contractResult, minerInfoResult] = await Promise.all([
       getIndexProviderPeerIdFromSmartContract(minerId, smartContract),
-      getIndexProviderPeerIdFromFilecoinMinerInfo(minerId, rpcFn, { maxAttempts }),
+      getIndexProviderPeerIdFromFilecoinMinerInfo(
+        minerId,
+        rpcFn ??
+          async function (/** @type {string} */ method, /** @type {unknown[]} */ params) {
+            return await rpc(method, params, rpcUrl ?? 'https://api.node.glif.io/', { rpcAuth })
+          },
+        { maxAttempts },
+      ),
     ])
     // Check contract result first
     if (contractResult) {
