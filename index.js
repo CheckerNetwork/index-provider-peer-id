@@ -1,6 +1,7 @@
 import { getIndexProviderPeerIdFromSmartContract } from './lib/smart-contract-client.js'
 import { getIndexProviderPeerIdFromFilecoinMinerInfo } from './lib/filecoin-rpc-client.js'
 import { rpc } from './lib/rpc-client.js'
+import assert from 'assert'
 export { MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from './lib/constants.js'
 
 /**
@@ -26,6 +27,7 @@ export async function getIndexProviderPeerId(
   } = {},
 ) {
   try {
+    assert.ok(!(rpcUrl && rpcFn), 'Cannot provide both rpcUrl and rpcFn')
     // Make concurrent requests to both sources: FilecoinMinerInfo and smart contract
     const [contractResult, minerInfoResult] = await Promise.all([
       getIndexProviderPeerIdFromSmartContract(minerId, smartContract),
@@ -38,15 +40,8 @@ export async function getIndexProviderPeerId(
     }
 
     // Fall back to FilecoinMinerInfo result
-    if (minerInfoResult) {
-      console.log('Using PeerID from FilecoinMinerInfo.')
-      return { peerId: minerInfoResult, source: 'minerInfo' }
-    }
-
-    // Handle the case where both failed
-    throw new Error(
-      `Failed to obtain Miner's Index Provider PeerID.\nSmartContract query result: ${contractResult}\nStateMinerInfo query result: ${minerInfoResult}`,
-    )
+    console.log('Using PeerID from FilecoinMinerInfo.')
+    return { peerId: minerInfoResult, source: 'minerInfo' }
   } catch (error) {
     throw Error(`Error fetching index provider PeerID for miner ${minerId}.`, {
       cause: error,

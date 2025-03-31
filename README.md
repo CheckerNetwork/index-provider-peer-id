@@ -41,7 +41,6 @@ const { peerId, source } = await getIndexProviderPeerId(minerId, contract, {
   maxAttempts: 3, // Number of retry attempts (default: 5)
   rpcUrl: 'https://custom-filecoin-api.com', // Custom Filecoin RPC endpoint (default: 'https://api.node.glif.io/')
   rpcAuth: 'your-auth-token', // Optional authorization token for RPC
-  rpcFn: customRpcFunction, // Optional custom RPC function implementation.
 })
 ```
 
@@ -54,6 +53,10 @@ const { peerId, source } = await getIndexProviderPeerId(minerId, contract, {
   - `rpcUrl`: Filecoin RPC endpoint URL (default: 'https://api.node.glif.io/')
   - `rpcAuth`: Authorization token for RPC endpoint (if required)
   - `rpcFn`: Custom function for making RPC calls.
+
+The options `rpcUrl` and `rpcFn` are mutually exclusive, meaning it is expected that if one of them
+is provided the other is not. The function `getIndexProviderPeerId` will throw an error if both are
+provided at the same time.
 
 #### Custom RPC Function
 
