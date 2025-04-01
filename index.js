@@ -40,7 +40,6 @@ export async function getIndexProviderPeerId(
     }
 
     // Fall back to FilecoinMinerInfo result
-    console.log('Using PeerID from FilecoinMinerInfo.')
     return { peerId: minerInfoResult, source: 'minerInfo' }
   } catch (error) {
     throw Error(`Error fetching index provider PeerID for miner ${minerId}.`, {
