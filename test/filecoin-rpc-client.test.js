@@ -207,4 +207,21 @@ describe('getIndexProviderPeerIdFromFilecoinMinerInfo', () => {
     assert.deepStrictEqual(typeof peerId, 'string', 'Expected peerId to be a string')
     assert.deepStrictEqual(peerId, '12D3KooWCtiN7tAjeLKL4mashteXdH4htUrzWu8bWN9kDU3qbKjQ')
   })
+
+  it('returns an error if the miner id cannot be found', async () => {
+    await assert.rejects(
+      async () => {
+        await getIndexProviderPeerIdFromFilecoinMinerInfo(
+          'f033033473425342342',
+          async (method, params) => {
+            return await rpc(method, params, RPC_URL, { rpcAuth: RPC_AUTH })
+          },
+        )
+      },
+      (err) => {
+        assert.ok(err.cause.toString().includes('failed to load miner actor: actor not found'))
+        return true
+      },
+    )
+  })
 })
