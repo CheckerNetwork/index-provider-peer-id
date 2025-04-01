@@ -9,7 +9,8 @@
     "test:types": "tsc -p .",
     "lint": "eslint && prettier --check .",
     "lint:fix": "eslint --fix && prettier . --write",
-    "test": "npm run lint && npm run test:types && npm run test:unit"
+    "test": "npm run lint && npm run test:types && npm run test:unit",
+    "release": "np"
   },
   "repository": {
     "type": "git",
@@ -24,13 +25,14 @@
   "devDependencies": {
     "@types/node": "^22.13.15",
     "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-prettier": "^5.2.5",
-    "ethers": "^6.13.5",
+    "eslint-plugin-prettier": "^5.2.4",
     "neostandard": "^0.12.1",
+    "np": "^10.2.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "ethers": "^6.13.5",
     "p-retry": "^6.2.1"
   }
 }
