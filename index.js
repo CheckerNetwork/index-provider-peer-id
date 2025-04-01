@@ -1,7 +1,7 @@
 import { getIndexProviderPeerIdFromSmartContract } from './lib/smart-contract-client.js'
 import { getIndexProviderPeerIdFromFilecoinMinerInfo } from './lib/filecoin-rpc-client.js'
 import { rpc } from './lib/rpc-client.js'
-import assert from 'assert'
+import assert from 'node:assert'
 export { MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from './lib/constants.js'
 
 /**
