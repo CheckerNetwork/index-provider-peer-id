@@ -52,7 +52,7 @@ const { peerId, source } = await getIndexProviderPeerId(minerId, contract, {
 - `options`: (Optional) Configuration object:
   - `maxAttempts`: Number of retry attempts for RPC calls (default: 5)
   - `rpcUrl`: Filecoin RPC endpoint URL (default: 'https://api.node.glif.io/')
-  - `rpcAuth`: Authorization token for RPC endpoint (if required)\
+  - `rpcAuth`: Authorization token for RPC endpoint (if required)
   - `signal`: An AbortSignal object for cancelling the rpc request (Only effects the rpc call to the
     Filecoin API, not the smart contract call)
 
