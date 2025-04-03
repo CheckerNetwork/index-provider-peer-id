@@ -12,12 +12,13 @@ export { MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from '
  * @param {string} [options.rpcUrl]
  * @param {string} [options.rpcAuth]
  * @param {(method:string,params:unknown[])=> Promise<unknown> } [options.rpcFn] The RPC function to use
+ * @param {AbortSignal} [options.signal]
  * @returns {Promise<{ peerId: string, source: 'smartContract'|'minerInfo' }>} Miner's PeerId, e.g. `12D3KooWMsPmAA65yHAHgbxgh7CPkEctJHZMeM3rAvoW8CZKxtpG` and the source of the data
  */
 export async function getIndexProviderPeerId(
   minerId,
   smartContract,
-  { maxAttempts = 5, rpcUrl, rpcAuth, rpcFn } = {},
+  { maxAttempts = 5, rpcUrl, rpcAuth, rpcFn, signal } = {},
 ) {
   try {
     assert.ok(!(rpcUrl && rpcFn), 'Cannot provide both rpcUrl and rpcFn')
@@ -28,7 +29,10 @@ export async function getIndexProviderPeerId(
         minerId,
         rpcFn ??
           async function (/** @type {string} */ method, /** @type {unknown[]} */ params) {
-            return await rpc(method, params, rpcUrl ?? 'https://api.node.glif.io/', { rpcAuth })
+            return await rpc(method, params, rpcUrl ?? 'https://api.node.glif.io/', {
+              rpcAuth,
+              signal,
+            })
           },
         { maxAttempts },
       ),

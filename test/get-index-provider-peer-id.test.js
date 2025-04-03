@@ -139,4 +139,38 @@ describe('getIndexProviderPeerId', () => {
       },
     )
   })
+
+  it('aborts the request when signal is triggered', async () => {
+    const minerId = '123456'
+
+    // Create an AbortController
+    const controller = new AbortController()
+    const { signal } = controller
+
+    const mockContract = {
+      getPeerData: async () => {
+        return { peerID: '' }
+      },
+    }
+
+    // Abort after a short delay
+    setTimeout(() => {
+      controller.abort()
+    }, 100)
+
+    // Start the request
+    await assert.rejects(
+      async () =>
+        await getIndexProviderPeerId(minerId, mockContract, {
+          signal,
+        }),
+      (err) => {
+        assert.ok(
+          err.cause.cause.toString().includes('This operation was aborted'),
+          `Expected error message: This operation was aborted, got ${err.cause}`,
+        )
+        return true
+      },
+    )
+  })
 })
