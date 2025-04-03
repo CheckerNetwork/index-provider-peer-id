@@ -1,11 +1,11 @@
 import assert from 'node:assert'
 import { describe, it } from 'node:test'
 import {
-  // MINER_TO_PEERID_CONTRACT_ADDRESS,
-  // MINER_TO_PEERID_CONTRACT_ABI,
+  MINER_TO_PEERID_CONTRACT_ADDRESS,
+  MINER_TO_PEERID_CONTRACT_ABI,
   getIndexProviderPeerId,
 } from '../index.js'
-//import { ethers } from 'ethers'
+import { ethers } from 'ethers'
 
 export const { RPC_URL = 'https://api.node.glif.io/', RPC_AUTH } = process.env
 // Create a custom JsonRpcProvider with authorization header
