@@ -41,7 +41,7 @@ const { peerId, source } = await getIndexProviderPeerId(minerId, contract, {
   maxAttempts: 3, // Number of retry attempts (default: 5)
   rpcUrl: 'https://custom-filecoin-api.com', // Custom Filecoin RPC endpoint (default: 'https://api.node.glif.io/')
   rpcAuth: 'your-auth-token', // Optional authorization token for RPC
-  signal: AbortSignal, // Optional AbortSignal for cancellation
+  signal: AbortSignal.timeout(60_000), // Optional AbortSignal for cancellation
 })
 ```
 
