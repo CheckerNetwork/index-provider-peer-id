@@ -6,7 +6,7 @@ export { MINER_TO_PEERID_CONTRACT_ADDRESS, MINER_TO_PEERID_CONTRACT_ABI } from '
 
 /**
  * @param {string} minerId A miner actor id, e.g. `f0142637`
- * @param {import('ethers').Contract} smartContract The smart contract instance
+ * @param {import('./lib/typings.js').MinerPeerIdSmartContract} smartContract The smart contract instance
  * @param {object} options
  * @param {number} [options.maxAttempts]
  * @param {string} [options.rpcUrl]
