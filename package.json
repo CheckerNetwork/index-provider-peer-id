@@ -33,6 +33,6 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "p-retry": "^6.2.1"
+    "p-retry": "^7.0.0"
   }
 }
