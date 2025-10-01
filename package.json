@@ -30,7 +30,7 @@
     "neostandard": "^0.12.2",
     "np": "^10.2.0",
     "prettier": "^3.6.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "p-retry": "^7.0.0"
