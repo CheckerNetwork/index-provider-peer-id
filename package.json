@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/CheckerNetwork/index-provider-peer-id#readme",
   "devDependencies": {
-    "@types/node": "^24.10.2",
+    "@types/node": "^25.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "ethers": "^6.16.0",
